@@ -1,4 +1,4 @@
-### What is Spyder
+<h1>About Spyder</h1>
 Spyder is a little tool written in Python that analyses the source code of your project
 and calculates a stability-index for each component. This could help you to improve your software architecture
 or give you an indicator of which classes should be refactored, for example,
@@ -25,7 +25,7 @@ Additionally, the dependencies of your component should have a lower instability
 in your project depend on components that are less stable. Consider adding an abstraction in this case to have more robustness
 towards changes within your system.
 
-##TODO
+<h1>TODO's</h1>
 <ul>
 <li>
 Right now only Source Code written in Kotlin is supported. Adding new language support is trivial, it requires a regex rule for the language that specifies
