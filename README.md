@@ -6,7 +6,8 @@ a class with a high instability rating should not contain a lot of logic since i
 a lot on other classes and might break easier. The formula for calculating the stability was proposed by Robert C. Martin
 in his book "Clean Architecture" where he describes it as follows:<br/>
 <code>S = |d_out| / |d_in| + |d_out|</code> <br/>where <b>S</b> is the stability of a component, <b>d_out</b> the outgoing dependencies 
-and <b>d_in</b> the incoming dependencies. Basically, a value <b>S</b> is assigned to each of your components (classes).<br/><br/>
+and <b>d_in</b> the incoming dependencies. Basically, a value between 0 and 1 is assigned to each of your components (classes)
+where 1 means your component is very unstable and 0 means it's stable.<br/><br/>
 Let's have an example. We imply we have two components, <b>A</b> and <b>B</b>, with the following dependency flow<br/><br/>
 <i><b>A</b> ---> <b>B</b></i> <br/><br/>
 <b>A</b> has 1 outgoing dependency (to B) and 0 incoming dependencies. B has 1 incoming dependency (from A) and 0 outgoing dependencies.
