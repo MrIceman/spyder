@@ -1,9 +1,9 @@
 from os import listdir
 from os.path import isfile, join
 
+from lib.parser.kotlin.kotlin import KotlinParser
 from model.component import Component
 from lib.config import Config
-from lib.parser.kotlin import KotlinParser
 
 
 class DependencyReader:
