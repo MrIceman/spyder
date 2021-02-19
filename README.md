@@ -15,8 +15,7 @@ The stability index for <b>A</b> would be 1, means it is unstable and will be ef
 Component <b>B</b> in this case has a stability index of 0, which means it is stable and resistant towards changes within the system.<br/>
 So naturally, if Component <b>B</b> breaks then you'll have to refactor <b>A</b>.<br/>What does this tell us? <br/>
 Well, we could conclude following:
-<ol>
-<li>
+<ol><li>
 <b>A</b> breaks if <b>B</b> changes</li>
 <li>
 <b>B</b> is more stable than <b>A</b></li>
