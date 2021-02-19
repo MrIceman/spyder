@@ -1,19 +1,20 @@
 import re
 
 from lib.config import Config
+from lib.parser.parser import AbstractParser
 
 
-class KotlinParser:
+class KotlinParser(AbstractParser):
 
     def __init__(self, config: Config):
         self.config = config
 
-    def parse(self, file) -> [(str, str)]:
+    def parse(self, file_path) -> [(str, str)]:
         """
-        :param file: the file path to the source code
+        :param file_path: the file path to the source code
         :return: returns an array of tuples of (package_name, component_name)
         """
-        with open(file, "r") as f:
+        with open(file_path, "r") as f:
             data = f.read()
             return self._parse_dependencies(data)
 

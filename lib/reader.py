@@ -90,6 +90,3 @@ class DependencyReader:
     def get_dependencies(self):
         return sorted(self.component_map.values(),
                       key=lambda k: k.instability_rating)
-
-# 'de.porsche.mobile.paf.payment.CreditCardViewModel'
-# 'subscription.bottomnavigation.CreditCardViewModel'
