@@ -14,8 +14,12 @@ class DependencyReader:
         self.root = root_project_path
         self.bums = dict()
         self.component_map: {str: Component} = {}
+        # make this configurable
+        self.parser = KotlinParser(config)
+        # a cache that holds the abstraction for each read file
+        self.abstraction_map: {str: bool} = dict()
 
-    def _browse_dir(self, dir_path):
+    def _init_components(self, dir_path):
         entries = listdir(dir_path)
         for e in entries:
             e_low = e.lower()
@@ -41,10 +45,14 @@ class DependencyReader:
                     """
                     package_path = '.'.join(dir_path.replace('/', '.').split('.')[-2::])
                     e_filtered = f'{package_path}.{e.replace(self.config.file_extension, "")}'
-                    dependencies = KotlinParser(config=self.config).parse(join(dir_path, e))
+                    dependencies, is_abstraction = self.parser.parse(join(dir_path, e))
                     comp = self.component_map.get(e_filtered, None)
                     if comp is None:
-                        comp = Component(name=e_filtered, package=package_path)
+                        comp = Component(name=e_filtered,
+                                         package=package_path,
+                                         is_abstraction=is_abstraction)
+                    else:
+                        self.component_map[e_filtered].is_abstraction = is_abstraction
                     for dep in dependencies:
                         dep_package_name = dep[0]
                         # it is critical to test that dep_component_name has the same structure as e_filtered
@@ -58,16 +66,17 @@ class DependencyReader:
 
             else:
                 # it's a dir, we can recursively go through the method again
-                self._browse_dir(join(dir_path, e))
+                self._init_components(join(dir_path, e))
 
     def analyse(self):
-        self._browse_dir(self.root)
-        self._init_stability()
+        self._init_components(self.root)
+        self._compute_metrics()
 
-    def _init_stability(self):
+    def _compute_metrics(self):
         for k, v in self.component_map.items():
             d_out = len(v.dependencies)
             d_in = 0
+
             for k1, v1 in self.component_map.items():
                 if k1 == k:
                     continue
@@ -82,10 +91,25 @@ class DependencyReader:
                 of outgoing dependencies and |d_in| the amount of
                 in going dependencies
                 """
-                instability_rating = abs(d_out) / (abs(d_out) + abs(d_in))
+                instability_rating = d_out / (d_out + d_in)
             except ZeroDivisionError:
                 instability_rating = 0
+
             v.instability_rating = instability_rating
+
+            # Compute degree of stability
+            ac = 0
+            for c in v.dependencies:
+                if c.is_abstraction:
+                    ac += 1
+            try:
+                """
+                A = AC / TC 
+                """
+                a = ac / d_out
+            except ZeroDivisionError:
+                a = 0
+            v.abstraction_degree = a
 
     def get_dependencies(self):
         return sorted(self.component_map.values(),

@@ -9,7 +9,7 @@ class KotlinParser(AbstractParser):
     def __init__(self, config: Config):
         self.config = config
 
-    def parse(self, file_path) -> [(str, str)]:
+    def parse(self, file_path) -> ([(str, str)], bool):
         """
         :param file_path: the file path to the source code
         :return: returns an array of tuples of (package_name, component_name)
@@ -18,7 +18,7 @@ class KotlinParser(AbstractParser):
             data = f.read()
             return self._parse_dependencies(data)
 
-    def _parse_dependencies(self, raw_code) -> [(str, str)]:
+    def _parse_dependencies(self, raw_code) -> ([(str, str)], bool):
         import_pattern = r'(?<=import.).*'
         dependencies = []
         res = re.findall(import_pattern, raw_code)
@@ -40,4 +40,9 @@ class KotlinParser(AbstractParser):
                 continue
             dependency_name = f'.'.join(pieces[-3::])
             dependencies.append((package, dependency_name))
-        return dependencies
+        return dependencies, self.is_abstraction(raw_code)
+
+    def is_abstraction(self, raw_code: str) -> bool:
+        regex = '^(public\s|internal\s|)interface|^(abstract)'
+        result = re.findall(regex, raw_code, re.MULTILINE)
+        return len(result) > 0
