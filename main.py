@@ -2,16 +2,14 @@ from lib.analyser import ComponentAnalyser
 from lib.config import Config
 from lib.reader import DependencyReader
 
-# root_project_path = '/Users/iceman/AndroidStudioProjects/ibm/android-modules'
-
-root_project_path = "/Users/iceman/AndroidStudioProjects/syrocon/ppa/android-app-framework"
+root_project_path = 'Users/.../PATH_TO_YOUR_PROJECT'
 reader = DependencyReader(
     config=Config(
         file_extension='.kt',
         ignore_words=['test',
                       'button',
                       'gradle'],
-        root_packages=['de.porsche.mobile.paf'],
+        root_packages=['com.example.company'],
         ignore_packages=['kotlinx']
     ),
     root_project_path=root_project_path)
