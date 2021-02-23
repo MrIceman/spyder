@@ -1,6 +1,7 @@
 from os import listdir
 from os.path import isfile, join
 
+import json
 from lib.parser.kotlin.kotlin import KotlinParser
 from model.component import Component
 from lib.config import Config
@@ -52,7 +53,7 @@ class DependencyReader:
                                          package=package_path,
                                          is_abstraction=is_abstraction)
                     else:
-                        self.component_map[e_filtered].is_abstraction = is_abstraction
+                        comp.is_abstraction = is_abstraction
                     for dep in dependencies:
                         dep_package_name = dep[0]
                         # it is critical to test that dep_component_name has the same structure as e_filtered
@@ -114,3 +115,8 @@ class DependencyReader:
     def get_dependencies(self):
         return sorted(self.component_map.values(),
                       key=lambda k: k.instability_rating)
+
+    def dump_json(self, file_path: str):
+        with open(file_path, 'wb') as f:
+            json_data = json.dumps([i.to_dict() for i in self.get_dependencies()])
+            f.write(bytes(json_data, encoding='UTF-8'))
