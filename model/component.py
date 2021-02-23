@@ -19,3 +19,14 @@ class Component:
 
     def add_dependency(self, dependency):
         self.dependencies.append(dependency)
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'package': self.package,
+            'is_abstraction': self.is_abstraction,
+            'dependencies': [i.name for i in self.dependencies],
+            'bums': [i.name for i in self.bums],
+            'instability_rating': self.instability_rating,
+            'abstraction_degree': self.abstraction_degree
+        }
